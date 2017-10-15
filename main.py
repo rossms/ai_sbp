@@ -55,4 +55,5 @@ currentBoard = loadBoard()
 #normalizedBoard = Board.normalize(newBoard)
 #print(Board.simpleComparison(Board.normalize(newBoard),Board.normalize(currentBoard)))
 
-randomWalks(Board, currentBoard, 5)
+#randomWalks(Board, currentBoard, 5)
+breathFirstPlay(Board, currentBoard)
