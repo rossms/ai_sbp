@@ -7,6 +7,8 @@ class Board(object):
         self.h = h
         self.matrix = matrix
         self.flatList = flatList
+        self.movesToCurrent = []
+        self.winner = False
 
     def show(currentBoard):
         print(currentBoard.w,',',currentBoard.h,',',sep='')
@@ -66,15 +68,24 @@ class Board(object):
             moveDown = True
             moveLeft = True
             for pos in obj.currentPosition:
-
-                if currentBoard.matrix[pos[0]-1][pos[1]] != 0 and currentBoard.matrix[pos[0]-1][pos[1]] != obj.id:
-                    moveUp = False
-                if currentBoard.matrix[pos[0]][pos[1]+1] != 0 and currentBoard.matrix[pos[0]][pos[1]+1] != obj.id:
-                    moveRight = False
-                if currentBoard.matrix[pos[0]+1][pos[1]] != 0 and currentBoard.matrix[pos[0]+1][pos[1]] != obj.id:
-                    moveDown = False
-                if currentBoard.matrix[pos[0]][pos[1]-1] != 0 and currentBoard.matrix[pos[0]][pos[1]-1] != obj.id:
-                    moveLeft = False
+                if obj.id == 2:
+                    if currentBoard.matrix[pos[0]-1][pos[1]] != 0 and currentBoard.matrix[pos[0]-1][pos[1]] != obj.id and currentBoard.matrix[pos[0]-1][pos[1]] != -1:
+                        moveUp = False
+                    if currentBoard.matrix[pos[0]][pos[1]+1] != 0 and currentBoard.matrix[pos[0]][pos[1]+1] != obj.id and currentBoard.matrix[pos[0]][pos[1]+1] != -1:
+                        moveRight = False
+                    if currentBoard.matrix[pos[0]+1][pos[1]] != 0 and currentBoard.matrix[pos[0]+1][pos[1]] != obj.id and currentBoard.matrix[pos[0]+1][pos[1]] != -1:
+                        moveDown = False
+                    if currentBoard.matrix[pos[0]][pos[1]-1] != 0 and currentBoard.matrix[pos[0]][pos[1]-1] != obj.id and currentBoard.matrix[pos[0]][pos[1]-1] != -1:
+                        moveLeft = False
+                else:
+                    if currentBoard.matrix[pos[0]-1][pos[1]] != 0 and currentBoard.matrix[pos[0]-1][pos[1]] != obj.id:
+                        moveUp = False
+                    if currentBoard.matrix[pos[0]][pos[1]+1] != 0 and currentBoard.matrix[pos[0]][pos[1]+1] != obj.id:
+                        moveRight = False
+                    if currentBoard.matrix[pos[0]+1][pos[1]] != 0 and currentBoard.matrix[pos[0]+1][pos[1]] != obj.id:
+                        moveDown = False
+                    if currentBoard.matrix[pos[0]][pos[1]-1] != 0 and currentBoard.matrix[pos[0]][pos[1]-1] != obj.id:
+                        moveLeft = False
             if moveUp:
                 newMove = (obj.id,0)
                 moves.append(newMove)

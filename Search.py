@@ -1,5 +1,19 @@
+from __future__ import print_function
 from random import randint
 from copy import deepcopy
+
+def prettyPrint(moves):
+    for move in moves:
+        printDirection = ""
+        if move[1] == 0:
+            printDirection = 'up'
+        elif move[1] == 1:
+            printDirection = 'right'
+        elif move[1] == 2:
+            printDirection = 'down'
+        elif move[1] == 3:
+            printDirection = 'left'
+        print('(',move[0],',',printDirection,')',sep='')
 
 def randomWalks(Board, board, rand):
     solved = False
@@ -36,73 +50,33 @@ def breathFirstPlay(Board, board):
     #check if solved first
     if not solved:
         gamePlay = Board.moves(board)
-        pendingMoves = gamePlay.moves
         initialBoard = deepcopy(board)
-        #
-        #
-        #
-        #add one board to boards[]
-        #while boards 
-        #1.get moves for current board
-        #2.create deepcopy for each move, make move, check goal state, add board to boards
-        #3. remove level -1 boards
-        #
-        #
-        #
-        #initialState = state([],initialBoard)
-        #print(initialState)
-        #print(newState)
-        Board.show(initialBoard)
-        while pendingMoves:
-            #copyBoard = Board(initialBoard.h, initialBoard.w,initialBoard.matrix,initialBoard.flatList)
-            #newBoard = deepcopy(initialBoard)
-            pendingMove = pendingMoves.pop(0)
-            print(pendingMove)
-            newBoard = Board.applyMoveCloning(initialBoard, pendingMove, initialBoard.blocks)
-            newBoard.movesToCurrent = []
-            newBoard.movesToCurrent.append(pendingMove)
-            #newState = state([],newBoard)
-            boards.append(newBoard)
-
-        #print(initialState)
-        #print(newState)
-        #Board.show(initialState.currentBoard)
-        #board.show(newState.currentBoard)
-
-        #while pendingMoves:
-            #for pm in pendingMoves:
-                ##print(pm.block,',',pm.direction)
-
-            #print('currentGameBoard')
-            #self.show(boardx)
-            #pendingMove = pendingMoves.pop(0)
-            #print('current move',pendingMove.block,',',pendingMove.direction)
-            #newBoard = move.applyMoveCloning(move(), initialBoard, pendingMove, gamePlay.blocks)
-            #self.show(newBoard)
-            #newBoard.movesToCurrent.append(pendingMove)
-            #boards.append(newBoard)
-
-            # if pendingMove not in movesTried:
-            #     movesTried.append(pendingMove)
-            #     newBoard = move.applyMoveCloning(move(), board, pendingMove, gamePlay.blocks)
-            #     self.show(newBoard)
-            #     if(self.isSolved(newBoard)):
-            #         solved = True
-            #         break
-            #     newBoard.movesToCurrent.append(pendingMove)
-            #     boards.append(newBoard)
-                #nextGamePlay = self.moves(newBoard, self.getBlocks(newBoard))
-            #for newMove in nextGamePlay.moves:
-                #print('new move:',newMove.block,',',newMove.direction)
-                #pendingMoves.append(newMove)
-            #gameBoard = newBoard
-            #blocks = nextGamePlay.blocks
-        i = 0
+        initialBoard.pendingMoves = []
+        initialBoard.pendingMoves = gamePlay.moves
+        boards.append(initialBoard)
+        while boards:
+            board = boards.pop(0)
+            if solved:
+                break
+            else:
+                moves = board.pendingMoves
+                for pendingMove in board.pendingMoves:
+                    newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
+                    newBoard.movesToCurrent.append(pendingMove)
+                    if (Board.isSolved(newBoard)):
+                        solved = True
+                        newBoard.winner = True
+                        boards.append(newBoard)
+                        break
+                    else:
+                        newMovesSearch = Board.moves(newBoard)
+                        newBoard.pendingMoves = newMovesSearch.moves
+                        boards.append(newBoard)
         for board in boards:
-            i+=1
-            print('board',i)
-            Board.show(board)
-        for correctMoves in movesTried:
-            print('blockid:',correctMoves.block,',direction:',correctMoves.direction)
+            if board.winner:
+                Board.show(board)
+                prettyPrint(board.movesToCurrent)
+                #for move in board.movesToCurrent:
+                    #print 'move:',move
     else:
-        print('solved!!!!!')
+        print('the provided initial board state is already solved, exiting.')
