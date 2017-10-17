@@ -136,3 +136,60 @@ def depthFirstPlay(Board, board):
                 Board.show(board)
     else:
         print('the provided initial board state is already solved, exiting.')
+
+#combination of breadth first search and depth first search. searches depth wise
+#for a number of additional levels (default 1) and then goes back up to search
+#breadth wise for any pending nodes. my implementation alternates the every level
+#to try the next level deep move, or if its already tried a next level deep move,
+#adds the new move to the end of the queue to try later (after all at above level
+#have been attempted.)
+def iterativeDeepeningSearch(Board, board):
+    solved = False
+    pendingMoves = []
+    boardsTried = [board]
+    boards = []
+    #check if solved first
+    if not solved:
+        gamePlay = Board.moves(board)
+        initialBoard = deepcopy(board)
+        initialBoard.pendingMoves = []
+        initialBoard.pendingMoves = gamePlay.moves
+        boards.append(initialBoard)
+        searchLevel = 0
+        while boards:
+            board = boards.pop(0)
+            if solved:
+                break
+            else:
+                moves = board.pendingMoves
+                while moves:
+                    pendingMove = moves.pop(0)
+                    newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
+                    newBoard.movesToCurrent.append(pendingMove)
+                    if (Board.isSolved(newBoard)):
+                        solved = True
+                        newBoard.winner = True
+                        boards.append(newBoard)
+                        break
+                    else:
+                        for b in boardsTried:
+                            if Board.simpleComparison(b,newBoard):
+                                break
+                        else:
+                            boardsTried.append(newBoard)
+                            newMovesSearch = Board.moves(newBoard)
+                            newBoard.pendingMoves = []
+                            for newMove in newMovesSearch.moves:
+                                 newBoard.pendingMoves.append(newMove)
+                                 if searchLevel % 2 == 0:
+                                     boards.insert(0, newBoard)
+                                 else:
+                                     boards.append(newBoard)
+                                 searchLevel += 1
+                            break
+        for board in boards:
+            if board.winner:
+                prettyPrint(board.movesToCurrent)
+                Board.show(board)
+    else:
+        print('the provided initial board state is already solved, exiting.')

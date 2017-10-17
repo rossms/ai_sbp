@@ -61,4 +61,5 @@ currentBoard = loadBoard()
 
 #randomWalks(Board, currentBoard, 5)
 #breathFirstPlay(Board, currentBoard)
-depthFirstPlay(Board, currentBoard)
+#depthFirstPlay(Board, currentBoard)
+iterativeDeepeningSearch(Board, currentBoard)
