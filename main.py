@@ -1,11 +1,12 @@
+from __future__ import print_function
 from Board import *
 from copy import deepcopy
 from Search import *
 #load a board from disk
 
-def loadBoard():
+def loadBoard(filename):
     #fname = raw_input('Please provide a file and absolute path.. and then hit RETURN / ENTER \n')
-    fname = '/Users/Ross/Documents/Grad_School/CS510/sbp/docs/SBP-level0.txt'
+    fname = filename
     with open(fname) as f:
         content = f.read()
 
@@ -24,8 +25,23 @@ def loadBoard():
 
 
 
+def main():
+    print('1. Random walks:')
+    currentBoard = loadBoard('./SBP-level1.txt')
+    Board.show(currentBoard)
+    randomWalks(Board, currentBoard, 3)
+    print('\n','2. Breadth-first search:',sep='')
+    currentBoard = loadBoard('./SBP-level0.txt')
+    breathFirstPlay(Board, currentBoard)
+    print('\n','3. Depth-first search:',sep='')
+    currentBoard = loadBoard('./SBP-level1.txt')
+    depthFirstPlay(Board, currentBoard)
+    print('\n','4. Iterative-Deepening search:',sep='')
+    currentBoard = loadBoard('./SBP-level1.txt')
+    iterativeDeepeningSearch(Board, currentBoard)
 
-currentBoard = loadBoard()
+
+main()
 #print out the current board
 #currentBoard.show(currentBoard)
 #clone a state/board
@@ -62,4 +78,4 @@ currentBoard = loadBoard()
 #randomWalks(Board, currentBoard, 5)
 #breathFirstPlay(Board, currentBoard)
 #depthFirstPlay(Board, currentBoard)
-iterativeDeepeningSearch(Board, currentBoard)
+#iterativeDeepeningSearch(Board, currentBoard)

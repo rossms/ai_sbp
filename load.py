@@ -1,8 +1,8 @@
 from board import *
 
-def loadBoard():
+def loadBoard(filename):
     #fname = raw_input('Please provide a file and absolute path.. and then hit RETURN / ENTER \n')
-    fname = '/Users/Ross/Documents/Grad_School/CS510/sbp/docs/SBP-level0.txt'
+    fname = filename
     with open(fname) as f:
         content = f.read()
 

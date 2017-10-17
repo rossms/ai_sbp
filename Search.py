@@ -1,6 +1,7 @@
 from __future__ import print_function
 from random import randint
 from copy import deepcopy
+import datetime
 
 def prettyPrint(moves):
     for move in moves:
@@ -21,7 +22,7 @@ def randomWalks(Board, board, rand):
         for n in xrange(0, rand):
             currentBoard = Board.moves(board)
             rand = randint(1,len(currentBoard.moves))
-            print(currentBoard.moves[(rand - 1)])
+            #print(currentBoard.moves[(rand - 1)])
             newBoard = Board.applyMoveCloning(board, currentBoard.moves[(rand - 1)], currentBoard.blocks)
             #normalizedBoard = board.normalize(newBoard)
             #print(newBoard.h)
@@ -36,9 +37,10 @@ def randomWalks(Board, board, rand):
                 printDirection = 'down'
             elif currentBoard.moves[(rand - 1)][1] == 3:
                 printDirection = 'left'
-            print(currentBoard.moves[(rand - 1)][1],printDirection)
-            #board.show(board)
-            print(solved)
+
+            print('\n','(',currentBoard.moves[(rand - 1)][1],',',printDirection,')','\n',sep='')
+            Board.show(board)
+            #print(solved)
 
 #finds a solution given a board, by searching/moving all of the known moves first,
 #then applying those moves and searching/moving all moves from those states, and so on
@@ -49,9 +51,12 @@ def randomWalks(Board, board, rand):
 #4.save those boards in list.
 #5.repeat until solution is found.
 def breathFirstPlay(Board, board):
+    startTime = datetime.datetime.now()
     solved = False
     pendingMoves = []
     boards = []
+    boardsTried = [board]
+    i = 0
     #check if solved first
     if not solved:
         gamePlay = Board.moves(board)
@@ -66,21 +71,31 @@ def breathFirstPlay(Board, board):
             else:
                 moves = board.pendingMoves
                 for pendingMove in board.pendingMoves:
+                    i += 1
+                    #print(pendingMove)
                     newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
                     newBoard.movesToCurrent.append(pendingMove)
                     if (Board.isSolved(newBoard)):
+                        endTime = datetime.datetime.now()
                         solved = True
                         newBoard.winner = True
                         boards.append(newBoard)
                         break
                     else:
-                        newMovesSearch = Board.moves(newBoard)
-                        newBoard.pendingMoves = newMovesSearch.moves
-                        boards.append(newBoard)
+                        for b in boardsTried:
+                            if Board.simpleComparison(b,newBoard):
+                                break
+                        else:
+                            newMovesSearch = Board.moves(newBoard)
+                            newBoard.pendingMoves = newMovesSearch.moves
+                            boards.append(newBoard)
         for board in boards:
             if board.winner:
                 prettyPrint(board.movesToCurrent)
                 Board.show(board)
+                time = endTime - startTime
+                h, m, s = str(time).split(':')
+                print(i, round(float(s),2), len(board.movesToCurrent))
     else:
         print('the provided initial board state is already solved, exiting.')
 
@@ -91,10 +106,12 @@ def breathFirstPlay(Board, board):
 #search, then we would set a limit or make sure we never got back to the original
 #board state
 def depthFirstPlay(Board, board):
+    startTime = datetime.datetime.now()
     solved = False
     pendingMoves = []
     boardsTried = [board]
     boards = []
+    i = 0
     #check if solved first
     if not solved:
         gamePlay = Board.moves(board)
@@ -109,10 +126,12 @@ def depthFirstPlay(Board, board):
             else:
                 moves = board.pendingMoves
                 while moves:
+                    i += 1
                     pendingMove = moves.pop(0)
                     newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
                     newBoard.movesToCurrent.append(pendingMove)
                     if (Board.isSolved(newBoard)):
+                        endTime = datetime.datetime.now()
                         solved = True
                         newBoard.winner = True
                         boards.append(newBoard)
@@ -134,6 +153,9 @@ def depthFirstPlay(Board, board):
             if board.winner:
                 prettyPrint(board.movesToCurrent)
                 Board.show(board)
+                time = endTime - startTime
+                h, m, s = str(time).split(':')
+                print(i, round(float(s),2), len(board.movesToCurrent))
     else:
         print('the provided initial board state is already solved, exiting.')
 
@@ -144,10 +166,12 @@ def depthFirstPlay(Board, board):
 #adds the new move to the end of the queue to try later (after all at above level
 #have been attempted.)
 def iterativeDeepeningSearch(Board, board):
+    startTime = datetime.datetime.now()
     solved = False
     pendingMoves = []
     boardsTried = [board]
     boards = []
+    i = 0
     #check if solved first
     if not solved:
         gamePlay = Board.moves(board)
@@ -163,10 +187,12 @@ def iterativeDeepeningSearch(Board, board):
             else:
                 moves = board.pendingMoves
                 while moves:
+                    i += 1
                     pendingMove = moves.pop(0)
                     newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
                     newBoard.movesToCurrent.append(pendingMove)
                     if (Board.isSolved(newBoard)):
+                        endTime = datetime.datetime.now()
                         solved = True
                         newBoard.winner = True
                         boards.append(newBoard)
@@ -191,5 +217,8 @@ def iterativeDeepeningSearch(Board, board):
             if board.winner:
                 prettyPrint(board.movesToCurrent)
                 Board.show(board)
+                time = endTime - startTime
+                h, m, s = str(time).split(':')
+                print(i, round(float(s),2), len(board.movesToCurrent))
     else:
         print('the provided initial board state is already solved, exiting.')
