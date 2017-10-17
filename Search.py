@@ -42,9 +42,14 @@ def randomWalks(Board, board, rand):
 
 #finds a solution given a board, by searching/moving all of the known moves first,
 #then applying those moves and searching/moving all moves from those states, and so on
+#0.start with an inital board.
+#1.for each current board (only one at this point)
+#2.search all moves for that given board state
+#3.create a copy of the board, and perform each moves independently.
+#4.save those boards in list.
+#5.repeat until solution is found.
 def breathFirstPlay(Board, board):
     solved = False
-    movesTried = []
     pendingMoves = []
     boards = []
     #check if solved first
@@ -74,9 +79,60 @@ def breathFirstPlay(Board, board):
                         boards.append(newBoard)
         for board in boards:
             if board.winner:
-                Board.show(board)
                 prettyPrint(board.movesToCurrent)
-                #for move in board.movesToCurrent:
-                    #print 'move:',move
+                Board.show(board)
+    else:
+        print('the provided initial board state is already solved, exiting.')
+
+#tries all possible moves on a board, starting with a single move and finding new
+#subsequent moves. traditionally in depth-first search, the search would work its
+#way back up a tree when it has run into a dead end. With sliding block puzzles,
+#there are no dead ends. Now if we were finding the most 'optimum' depth first
+#search, then we would set a limit or make sure we never got back to the original
+#board state
+def depthFirstPlay(Board, board):
+    solved = False
+    pendingMoves = []
+    boardsTried = [board]
+    boards = []
+    #check if solved first
+    if not solved:
+        gamePlay = Board.moves(board)
+        initialBoard = deepcopy(board)
+        initialBoard.pendingMoves = []
+        initialBoard.pendingMoves = gamePlay.moves
+        boards.append(initialBoard)
+        while boards:
+            board = boards.pop(0)
+            if solved:
+                break
+            else:
+                moves = board.pendingMoves
+                while moves:
+                    pendingMove = moves.pop(0)
+                    newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
+                    newBoard.movesToCurrent.append(pendingMove)
+                    if (Board.isSolved(newBoard)):
+                        solved = True
+                        newBoard.winner = True
+                        boards.append(newBoard)
+                        break
+                    else:
+                        for b in boardsTried:
+                            if Board.simpleComparison(b,newBoard):
+                                break
+                        else:
+                            boardsTried.append(newBoard)
+                            newMovesSearch = Board.moves(newBoard)
+                            newBoard.pendingMoves = []
+                            for newMove in newMovesSearch.moves:
+                                 newBoard.pendingMoves.append(newMove)
+                                 boards.insert(0, newBoard)
+
+                            break
+        for board in boards:
+            if board.winner:
+                prettyPrint(board.movesToCurrent)
+                Board.show(board)
     else:
         print('the provided initial board state is already solved, exiting.')

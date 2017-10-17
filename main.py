@@ -60,4 +60,5 @@ currentBoard = loadBoard()
 #print(Board.simpleComparison(Board.normalize(newBoard),Board.normalize(currentBoard)))
 
 #randomWalks(Board, currentBoard, 5)
-breathFirstPlay(Board, currentBoard)
+#breathFirstPlay(Board, currentBoard)
+depthFirstPlay(Board, currentBoard)
