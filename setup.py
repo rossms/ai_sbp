@@ -7,5 +7,5 @@ setup(name='sbp',
       author='ross',
       author_email='ross@drexel.edu',
       license='MIT',
-      packages=['sbp'],
+      packages=['app'],
       zip_safe=False)
