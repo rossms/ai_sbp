@@ -27,11 +27,11 @@ def loadBoard(filename):
 
 def main():
     print('1. Random walks:')
-    currentBoard = loadBoard('./SBP-level1.txt')
+    currentBoard = loadBoard('./SBP-level0.txt')
     Board.show(currentBoard)
     randomWalks(Board, currentBoard, 3)
     print('\n','2. Breadth-first search:',sep='')
-    currentBoard = loadBoard('./SBP-level0.txt')
+    currentBoard = loadBoard('./SBP-level1.txt')
     breathFirstPlay(Board, currentBoard)
     print('\n','3. Depth-first search:',sep='')
     currentBoard = loadBoard('./SBP-level1.txt')

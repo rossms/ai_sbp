@@ -1,0 +1,13 @@
+This is a readme for CS510 homework 1
+
+I have implemented this assignment in python. Since python is installed on the tux servers,
+the python scripts are able to be executed directly, without being packaged into an executable first.
+
+I have created hw1(.sh) that calls my main.py, so it is even easier.
+
+To run, simply execute ./hw1 in the current directory.
+
+Thanks and let me know if you have any questions: ross@drexel.edu.
+
+Notes:
+Breadth-first is very inefficient. It takes about 4-5 minutes on the board 1.

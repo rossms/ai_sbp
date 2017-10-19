@@ -65,14 +65,17 @@ def breathFirstPlay(Board, board):
         initialBoard.pendingMoves = gamePlay.moves
         boards.append(initialBoard)
         while boards:
+            i += 1
             board = boards.pop(0)
             if solved:
                 break
             else:
                 moves = board.pendingMoves
-                for pendingMove in board.pendingMoves:
-                    i += 1
+                #for pendingMove in board.pendingMoves:
+                while moves:
+                    #print(i)
                     #print(pendingMove)
+                    pendingMove = moves.pop(0)
                     newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
                     newBoard.movesToCurrent.append(pendingMove)
                     if (Board.isSolved(newBoard)):
@@ -89,13 +92,18 @@ def breathFirstPlay(Board, board):
                             newMovesSearch = Board.moves(newBoard)
                             newBoard.pendingMoves = newMovesSearch.moves
                             boards.append(newBoard)
+                            boardsTried.append(newBoard)
         for board in boards:
             if board.winner:
                 prettyPrint(board.movesToCurrent)
                 Board.show(board)
                 time = endTime - startTime
                 h, m, s = str(time).split(':')
-                print(i, round(float(s),2), len(board.movesToCurrent))
+                if m != 0:
+                    timeSpent = float(m) * 60 + float(s)
+                else:
+                    timeSpent = float(s)
+                print(i, round(timeSpent,2), len(board.movesToCurrent))
     else:
         print('the provided initial board state is already solved, exiting.')
 
@@ -120,13 +128,13 @@ def depthFirstPlay(Board, board):
         initialBoard.pendingMoves = gamePlay.moves
         boards.append(initialBoard)
         while boards:
+            i += 1
             board = boards.pop(0)
             if solved:
                 break
             else:
                 moves = board.pendingMoves
                 while moves:
-                    i += 1
                     pendingMove = moves.pop(0)
                     newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
                     newBoard.movesToCurrent.append(pendingMove)
@@ -147,7 +155,6 @@ def depthFirstPlay(Board, board):
                             for newMove in newMovesSearch.moves:
                                  newBoard.pendingMoves.append(newMove)
                                  boards.insert(0, newBoard)
-
                             break
         for board in boards:
             if board.winner:
@@ -181,13 +188,13 @@ def iterativeDeepeningSearch(Board, board):
         boards.append(initialBoard)
         searchLevel = 0
         while boards:
+            i += 1
             board = boards.pop(0)
             if solved:
                 break
             else:
                 moves = board.pendingMoves
                 while moves:
-                    i += 1
                     pendingMove = moves.pop(0)
                     newBoard = Board.applyMoveCloning(board, pendingMove, board.blocks)
                     newBoard.movesToCurrent.append(pendingMove)
